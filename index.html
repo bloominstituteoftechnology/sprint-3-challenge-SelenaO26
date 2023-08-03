@@ -59,6 +59,45 @@
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
 
+      constructor(...args) {
+        this.ints = 
+        args.filter((num) => Number.isInteger(num));
+      }
+      
+      getAll() {
+        return this.ints;
+      }
+
+      getEvens() {
+        return this.ints.filter((num) => num % 2 ===0);
+      }
+
+      getNegatives() {
+        return this.ints.filter((num) => num < 0);
+      }
+
+      getAllSquared(){
+        return this.ints.map((num) => num * num);
+      }
+
+      pop() {
+        if (this.ints.length ===0) return undefined;
+        return this.ints.pop();
+      }
+      push(num) {
+        if(! Number.isInteger(num)) return this.ints;
+        this.ints.push(num);
+        return this.ints
+      }
+
+      getEveryNth(n) {
+        if  (!Number.isInteger(n) || n <=0) return [];
+        return this.ints.filter((_, index) => index % n ===0);
+      }
+
+        getAllReversed() {
+          return [...this.ints].reverse();
+        }
     }
 
     // 👉 CHALLENGE 2 NerfGun
@@ -77,7 +116,35 @@
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
 
-    }
+      constructor(totalProjectiles) {
+        this.capacity = Math.max(0, totalProjectiles);
+        this.safetyOn = true;
+        this.ammo = this.capacity
+      }
+
+      shoot() {
+        if(this.ammo> 0 && !this.safetyOn) {
+          this.ammo--;
+          return  "Bang!"
+        } else {
+          return "Click!"
+        }
+      }
+      
+          reload(num) {
+          if(typeof num !== "number" || num <= 0 ) {
+            return "Error reloading!";
+          }
+          this.ammo=  Math.min(this.ammo + num, this.capacity);
+          return `${this.ammo} projectiles left!`;
+        }
+
+        toggleSafety(){
+          this.safetyOn = !this.safetyOn;
+          return this.safetyOn ? "Safety enabled!" : "Safety disabled!";
+        }
+      }
+    
 
     // 👉 CHALLENGE 3 EBook
     class EBook {
@@ -96,6 +163,20 @@
       // 🌟 HINT: remember about the `slice` method which strings and arrays have
       // ❗ Feel free to implement `back`, although this is not required nor graded
 
+      constructor(text, charactersPerPage) {
+        this.text = text;
+        this.charactersPerPage = charactersPerPage;
+        this.currrentPage = 0;
+      }
+
+      next() {
+        const nextPage =this.text.slice(
+          this.currrentPage *  this.charactersPerPage,
+          (this.currrentPage + 1)* this.charactersPerPage
+        );
+        this.currrentPage++;
+        return nextPage || null
+      }
     }
 
     // 👉 CHALLENGE 4 AntFarm
@@ -131,6 +212,35 @@
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
 
+      constructor(...antNames) {
+        this.ants = antNames.map((name) => ({name,health:100}))
+      }
+
+      work() {
+        const initialAntCount = this.ants.length;
+
+        if(initialAntCount === 0) {
+          return "No ants here. Did you work them to death?";
+        }
+
+        this.ants.forEach((ant) => {
+          ant.health = Math.max(ant.health - 20,0);
+        });
+
+        this.ants = this.ants.filter((ant) => ant.health > 0);
+        return `${initialAntCount} ants starting work!`;
+      }
+
+      feed(antName) {
+        let antFound = false;
+        for(let i = 0; i < this.ants.length; i++) {
+          if(this.ants[i].name === antName) {
+            this.ants[i].health += 15;
+            antFound = true;
+          }
+        }
+        return antFound ? "Yum!" : `${antName} not found!`
+      }
     }
 
     // 🧪 TESTS, do not make any changes below this line ===================
